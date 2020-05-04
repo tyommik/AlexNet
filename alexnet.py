@@ -6,12 +6,11 @@ class Conv2dAuto(nn.Conv2d):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.padding = (self.kernel_size[0] // 2, self.kernel_size[1] // 2) # dynamic add padding based on the kernel_size
-        print(self.padding)
 
 
 class AlexNet(nn.Module):
     """
-    input: image with shape 224x224x3
+    input: image with shape 3x224x224
     output: num_classes x 1
     """
     def __init__(self, num_classes=1000):
@@ -30,6 +29,7 @@ class AlexNet(nn.Module):
                        padding=2,
                        stride=1
                        ),
+            nn.BatchNorm2d(num_features=256),  # ???
             nn.ReLU(inplace=True),
             nn.MaxPool2d((3, 3), stride=2),
             Conv2dAuto(in_channels=256,
@@ -38,6 +38,7 @@ class AlexNet(nn.Module):
                        padding=1,
                        stride=1
                        ),
+            nn.BatchNorm2d(num_features=384),  # ???
             nn.ReLU(inplace=True),
             Conv2dAuto(in_channels=384,
                        out_channels=384,
@@ -45,6 +46,7 @@ class AlexNet(nn.Module):
                        padding=1,
                        stride=1
                        ),
+            nn.BatchNorm2d(num_features=384),  # ???
             nn.ReLU(inplace=True),
             Conv2dAuto(in_channels=384,
                        out_channels=256,
@@ -52,6 +54,7 @@ class AlexNet(nn.Module):
                        padding=1,
                        stride=1
                        ),
+            nn.BatchNorm2d(num_features=256),  # ???
             nn.ReLU(inplace=True),
             nn.MaxPool2d((3, 3), stride=2)
 
